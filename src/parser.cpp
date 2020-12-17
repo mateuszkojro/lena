@@ -1,15 +1,14 @@
 #include "parser.h"
 #include "debug.h"
 
-inline bool is_number(char znak) { return (znak >= 48 && znak <= 57); }
-
-inline bool is_comment(char znak) { return (znak == '#'); }
-inline bool is_whitespace(char znak) {
+ bool is_number(char znak) { return (znak >= 48 && znak <= 57); }
+ bool is_comment(char znak) { return (znak == '#'); }
+ bool is_whitespace(char znak) {
   return (znak == '\t' || znak == ' ' || znak == '\n');
 }
 
 // todo add bounds checking
-inline int to_number(std::string text) {
+ int to_number(std::string text) {
   int result = 0;
   for (int i = 0; i < text.size(); i++) {
     result += (text[i] - 48) * pow(10, text.size() - i - 1);
@@ -18,66 +17,15 @@ inline int to_number(std::string text) {
 }
 
 // todo add bounds checking
-inline int to_number(char znak) { return znak - 48; }
+ int to_number(char znak) { return znak - 48; }
 
-// base state
-state::state() {}
-state::state(char znak) { DEBC(znak, "state"); }
-state *state::read(char znak, std::vector<char> &out) {
-  ERR("WTF");
-  exit(123);
-}
-
-state *comment::read(char znak, std::vector<char> &out) {
-  DEBC(znak, ":err char");
-  if (znak == '\n' || znak == '\0') {
-    return new whitespace(znak);
-  }
-  return this;
-}
-
-state *whitespace::read(char znak, std::vector<char> &out) {
-  if (is_number(znak)) {
-    return new number(znak);
-  } else if (is_comment(znak)) {
-    return new comment(znak);
-  }
-  return this;
-}
-
-number::number(char znak) : state() {
-  DEBC(znak, "number");
-  buff_ = znak;
-}
-
-state *number::read(char znak, std::vector<char> &out) {
-  if (is_number(znak)) {
-    buff_ += znak;
-  } else {
-    if (to_number(buff_) < 256 && to_number(buff_) >= 0) {
-
-      DEBC(to_number(buff_), "wartosc liczbowa");
-      out.push_back(to_number(buff_));
-      buff_ = "";
-    } else {
-      std::cout << buff_ << "==" << to_number(buff_) << std::endl;
-      ERR("bad value");
-    }
-    if (is_comment(znak)) {
-      return new comment(znak);
-    } else if (is_whitespace(znak)) {
-      return new whitespace(znak);
-    }
-  }
-  return this;
-}
+//! parser
 
 parser::parser(std::string text) {
   buffer_.reserve(512 * 512 * sizeof(char));
   current_state_ = new header('0');
-  unsigned long itr = 0;
   for (char i : text) {
-    current_state_ = current_state_->read(i, buffer_);
+    current_state_->read(i, this);
   }
 }
 
@@ -93,43 +41,109 @@ std::vector<pixelRGB> parser::get() {
   return result;
 }
 
+void parser::change_state(state *new_state) {
+  current_state_ = new_state;
+}
 parser::~parser() { delete current_state_; }
 
-state *header::read(char znak, std::vector<char> &out) {
-  if (znak == '#') {
-    return new header_comment(znak);
-  } else if (format_.size() < 2) {
-    return new header_format(znak);
+//! state
+state::state() {}
+state::state(char znak) { DEBC(znak, "state"); }
+void state::read(char znak, parser *) {
+  ERR("WTF");
+  exit(123);
+}
+
+//! comment
+void comment::read(char znak, parser *machine) {
+  DEBC(znak, ":err char");
+  if (znak == '\n' || znak == '\0') {
+    machine->change_state(new whitespace(znak));
+    delete this;
+  }
+}
+
+//! whitespace
+void whitespace::read(char znak, parser *machine) {
+  if (is_number(znak)) {
+    machine->change_state(new number(znak));
+    delete this;
+  } else if (is_comment(znak)) {
+    machine->change_state(new comment(znak));
+    delete this;
+  }
+}
+
+//! number
+number::number(char znak) : state() {
+  DEBC(znak, "number");
+  buff_ = znak;
+}
+
+void number::read(char znak, parser *machine) {
+  if (is_number(znak)) {
+    buff_ += znak;
   } else {
-    return new header_dimentions(znak);
+    if (to_number(buff_) < 256 && to_number(buff_) >= 0) {
+      DEBC(to_number(buff_), "wartosc liczbowa");
+      machine->buffer_.push_back(to_number(buff_));
+      buff_ = "";
+    } else {
+      std::cout << buff_ << "==" << to_number(buff_) << std::endl;
+      ERR("bad value");
+    }
+    if (is_comment(znak)) {
+      machine->change_state(new comment(znak));
+      delete this;
+    }
+    else if (is_whitespace(znak)) {
+      machine->change_state(new whitespace(znak));
+      delete this;
+    }
   }
-  return this;
 }
 
-state *header_comment::read(char znak, std::vector<char> &out) {
+//! header
+void header::read(char znak, parser *machine) {
+  if (znak == '#') {
+    machine->change_state(new header_comment(znak));
+    delete this;
+  } else if (format_.size() < 2) {
+    machine->change_state(new header_format(znak));
+    delete this;
+  } else {
+    machine->change_state(new header_dimentions(znak));
+    delete this;
+  }
+}
+
+//! header comment
+void header_comment::read(char znak, parser* machine) {
   if (znak == '\n') {
-    return new header(znak);
+    machine->change_state(new header(znak));
+    delete this;
   }
-  return this;
 }
 
-state *header_format::read(char znak, std::vector<char> &out) {
+//! header format
+void header_format::read(char znak, parser* machine) {
   if (format_.size() == 1 && to_number(znak) < 6) {
     format_ += znak;
     is_binary_ = to_number(znak) > 3;
-    return new header_dimentions(znak);
+    machine->change_state(new header_dimentions(znak));
+    delete this;
   }
-  return this;
 }
 
-state *header_dimentions::read(char znak, std::vector<char> &out) {
+//! header dimentions
+void header_dimentions::read(char znak,parser* machine) {
   if (dimentions_.size() < 4 && is_number(znak)) {
     buffer_ += znak;
   } else if (dimentions_.size() < 4) {
     dimentions_.push_back(to_number(buffer_));
     buffer_ = "";
   } else {
-    return new number(znak);
+    machine->change_state(new number(znak));
+    delete this;
   }
-  return this;
 }

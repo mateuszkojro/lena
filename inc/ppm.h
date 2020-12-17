@@ -9,7 +9,7 @@ class ppm : public obraz {
 public:
   ppm() = delete;
   ppm(std::string file);
-  unsigned count_colors() {
+  unsigned long count_colors() {
     TIME_START(count);
     // uzywamy unordered_map zeby stwworzyc hash table - umozliwia szybkie i
     // proste liczenie roznych kolorow

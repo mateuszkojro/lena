@@ -21,7 +21,7 @@ class obraz {
 public:
   obraz() {}
 
-  unsigned virtual count_colors();
+  unsigned long virtual count_colors();
   unsigned virtual count_pixels();
 
 protected:
