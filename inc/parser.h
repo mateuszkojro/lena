@@ -15,27 +15,39 @@ class comment;
 class whitespace;
 class parser;
 
-// HELPERS
-bool is_number(char znak);
-bool is_comment(char znak);
-bool is_whitespace(char znak);
-int to_number(std::string text);
-int to_number(char znak);
+//! HELPERS
+inline bool is_number(char znak);
+inline bool is_comment(char znak);
+inline bool is_whitespace(char znak);
+inline int to_number(std::string text);
+inline int to_number(char znak);
 
-// STATES
+//! STATES
+
+class parser {
+public:
+  parser(std::string);
+  std::vector<pixelRGB> get();
+  inline void change_state(state *);
+  std::vector<char> buffer_;
+  ~parser();
+
+protected:
+  state *current_state_;
+};
 
 class state {
 public:
   state();
   state(char znak);
-  virtual state *read(char znak, std::vector<char> &out);
+  virtual void read(char, parser *);
   virtual ~state() {}
 };
 
 class header : public state {
 public:
-  header(char znak) { DEBC(znak, "header"); }
-  virtual state *read(char znak, std::vector<char> &out);
+  header(char znak){}
+  virtual void read(char, parser *);
 
 protected:
   std::string format_;
@@ -49,7 +61,7 @@ public:
     format_ += "P";
     DEBC(znak, "header format");
   }
-  state *read(char, std::vector<char> &);
+  void read(char, parser *);
 };
 
 class header_dimentions : public header {
@@ -57,7 +69,7 @@ public:
   header_dimentions(char znak) : header(znak) {
     DEBC(znak, "header dimentions");
   }
-  state *read(char, std::vector<char> &);
+  void read(char, parser *);
 
 protected:
   std::string buffer_;
@@ -66,7 +78,7 @@ protected:
 class header_comment : public header {
 public:
   header_comment(char znak) : header(znak) { DEBC(znak, "header comment"); }
-  state *read(char, std::vector<char> &);
+  void read(char, parser *);
 
 protected:
   std::string buffer_;
@@ -75,8 +87,8 @@ protected:
 class number : public state {
 public:
   number(char znak);
-  state *read(char znak, std::vector<char> &out);
-  virtual ~number() {}
+  void read(char znak, parser *);
+  // virtual ~number() {}
 
 private:
   std::string buff_;
@@ -85,26 +97,13 @@ private:
 class comment : public state {
 public:
   comment(char znak) : state() { DEBC(znak, "comment"); }
-  state *read(char znak, std::vector<char> &out);
+  void read(char znak, parser *);
 };
 
 class whitespace : public state {
 public:
-  whitespace(char znak) : state() { /* DEBC(znak, "whitespace");*/
-  }
-  state *read(char znak, std::vector<char> &out);
-};
-
-// TODO: co z kopiowaniem, "=", delete itd
-class parser {
-public:
-  parser(std::string);
-  std::vector<pixelRGB> get();
-  ~parser();
-
-protected:
-  state *current_state_;
-  std::vector<char> buffer_;
+  whitespace(char znak) : state() {}
+  void read(char znak, parser *);
 };
 
 #endif

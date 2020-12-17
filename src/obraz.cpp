@@ -2,7 +2,7 @@
 #include "debug.h"
 int liczkolory(obraz o) { return o.count_colors(); }
 
-unsigned obraz::count_colors() {
+unsigned long obraz::count_colors() {
   // uzywamy unordered_map zeby stwworzyc hash table - umozliwia szybkie i
   // proste liczenie roznych kolorow
   std::unordered_map<unsigned, bool> n_colors;

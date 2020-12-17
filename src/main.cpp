@@ -32,4 +32,5 @@ int main(int argc, char *argv[]) {
   }
   TIME_STOP(all, "all");
   std::cout << "there is: " << o->count_colors() << " colors" << std::endl;
+  delete o;
 }
