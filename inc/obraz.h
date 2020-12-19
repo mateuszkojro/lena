@@ -21,12 +21,13 @@ class obraz {
 public:
   obraz() {}
 
-  unsigned long virtual count_colors();
-  unsigned virtual count_pixels();
-
+  unsigned long count_colors();
+  unsigned long count_pixels();
+  virtual ~obraz(){}
 protected:
-  // MAYBE: czy robic to jako vector czy zostawic raw array
   std::vector<pixelRGB> buffer_;
+  int size_x_;
+  int size_y_;
 };
 
 #endif // OBRAZ_H
