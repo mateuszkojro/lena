@@ -7,33 +7,36 @@
   return (znak == '\t' || znak == ' ' || znak == '\n');
 }
 
-// todo add bounds checking
+
+// TODO add bounds checking
  int to_number(std::string text) {
+   //TODO check ujemne
   int result = 0;
-  for (int i = 0; i < text.size(); i++) {
+  for (unsigned i = 0; i < text.size(); i++) {
     result += (text[i] - 48) * pow(10, text.size() - i - 1);
   }
   return result;
 }
 
-// todo add bounds checking
- int to_number(char znak) { return znak - 48; }
+// TODO add bounds checking
+ int ascii_to_number(char znak) { return znak - 48; }
 
 //! parser
 
 parser::parser(std::string text) {
+  // rezerwujemy 512 * 512 for some performance bedzie troche mniej alokacji
   buffer_.reserve(512 * 512 * sizeof(char));
-  current_state_ = new header('0');
+  current_state_ = new header();
   for (char i : text) {
     current_state_->read(i, this);
   }
 }
 
 std::vector<pixelRGB> parser::get() {
-  // todo check what when too many or too little
+  // TODO check what when too many or too little
   std::vector<pixelRGB> result;
-  for (int i = 0; i < buffer_.size(); i += 3) {
-    char r = buffer_[i];
+  for (unsigned i = 0; i < buffer_.size(); i += 3) {
+    char r = buffer_[i + 0];
     char g = buffer_[i + 1];
     char b = buffer_[i + 2];
     result.push_back(pixelRGB(r, g, b));
@@ -48,17 +51,17 @@ parser::~parser() { delete current_state_; }
 
 //! state
 state::state() {}
-state::state(char znak) { DEBC(znak, "state"); }
-void state::read(char znak, parser *) {
+// state::state(char) {}
+void state::read(char , parser *) {
   ERR("WTF");
   exit(123);
 }
 
 //! comment
 void comment::read(char znak, parser *machine) {
-  DEBC(znak, ":err char");
+  DEBC(znak, "comment");
   if (znak == '\n' || znak == '\0') {
-    machine->change_state(new whitespace(znak));
+    machine->change_state(new whitespace());
     delete this;
   }
 }
@@ -69,7 +72,7 @@ void whitespace::read(char znak, parser *machine) {
     machine->change_state(new number(znak));
     delete this;
   } else if (is_comment(znak)) {
-    machine->change_state(new comment(znak));
+    machine->change_state(new comment());
     delete this;
   }
 }
@@ -93,11 +96,11 @@ void number::read(char znak, parser *machine) {
       ERR("bad value");
     }
     if (is_comment(znak)) {
-      machine->change_state(new comment(znak));
+      machine->change_state(new comment());
       delete this;
     }
     else if (is_whitespace(znak)) {
-      machine->change_state(new whitespace(znak));
+      machine->change_state(new whitespace());
       delete this;
     }
   }
@@ -106,13 +109,13 @@ void number::read(char znak, parser *machine) {
 //! header
 void header::read(char znak, parser *machine) {
   if (znak == '#') {
-    machine->change_state(new header_comment(znak));
+    machine->change_state(new header_comment());
     delete this;
   } else if (format_.size() < 2) {
-    machine->change_state(new header_format(znak));
+    machine->change_state(new header_format());
     delete this;
   } else {
-    machine->change_state(new header_dimentions(znak));
+    machine->change_state(new header_dimentions());
     delete this;
   }
 }
@@ -120,17 +123,17 @@ void header::read(char znak, parser *machine) {
 //! header comment
 void header_comment::read(char znak, parser* machine) {
   if (znak == '\n') {
-    machine->change_state(new header(znak));
+    machine->change_state(new header());
     delete this;
   }
 }
 
 //! header format
 void header_format::read(char znak, parser* machine) {
-  if (format_.size() == 1 && to_number(znak) < 6) {
+  if (format_.size() == 1 && ascii_to_number(znak) < 6) {
     format_ += znak;
-    is_binary_ = to_number(znak) > 3;
-    machine->change_state(new header_dimentions(znak));
+    is_binary_ = ascii_to_number(znak) > 3;
+    machine->change_state(new header_dimentions());
     delete this;
   }
 }
