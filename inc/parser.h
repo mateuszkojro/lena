@@ -20,7 +20,7 @@ inline bool is_number(char znak);
 inline bool is_comment(char znak);
 inline bool is_whitespace(char znak);
 inline int to_number(std::string text);
-inline int to_number(char znak);
+inline int ascii_to_number(char znak);
 
 //! STATES
 
@@ -39,14 +39,14 @@ protected:
 class state {
 public:
   state();
-  state(char znak);
+  // state(char znak);
   virtual void read(char, parser *);
   virtual ~state() {}
 };
 
 class header : public state {
 public:
-  header(char znak){}
+  header() {}
   virtual void read(char, parser *);
 
 protected:
@@ -57,18 +57,13 @@ protected:
 
 class header_format : public header {
 public:
-  header_format(char znak) : header(znak) {
-    format_ += "P";
-    DEBC(znak, "header format");
-  }
+  header_format() : header() { format_ += "P"; }
   void read(char, parser *);
 };
 
 class header_dimentions : public header {
 public:
-  header_dimentions(char znak) : header(znak) {
-    DEBC(znak, "header dimentions");
-  }
+  header_dimentions() : header() {}
   void read(char, parser *);
 
 protected:
@@ -77,18 +72,17 @@ protected:
 
 class header_comment : public header {
 public:
-  header_comment(char znak) : header(znak) { DEBC(znak, "header comment"); }
+  header_comment() : header() {}
   void read(char, parser *);
 
-protected:
-  std::string buffer_;
+// protected:
+  // std::string buffer_;
 };
 
 class number : public state {
 public:
-  number(char znak);
+  number(char);
   void read(char znak, parser *);
-  // virtual ~number() {}
 
 private:
   std::string buff_;
@@ -96,13 +90,13 @@ private:
 
 class comment : public state {
 public:
-  comment(char znak) : state() { DEBC(znak, "comment"); }
+  comment() : state() {}
   void read(char znak, parser *);
 };
 
 class whitespace : public state {
 public:
-  whitespace(char znak) : state() {}
+  whitespace() : state() {}
   void read(char znak, parser *);
 };
 
