@@ -9,7 +9,8 @@ class pixel
 {
 public:
     pixel(){};
-    inline virtual unsigned hash() { ERR("reading in virtual pixel"); };
+    inline virtual unsigned hash() { ERR("reading in virtual pixel"); return 1; };
+    virtual ~pixel(){};
 };
 
 #endif
