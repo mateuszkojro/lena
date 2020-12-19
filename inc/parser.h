@@ -8,6 +8,7 @@
 #include "debug.h"
 #include "pixel.h"
 #include "pixelRGB.h"
+#include "ppm.h"
 
 class state;
 class number;
@@ -23,7 +24,6 @@ inline int to_number(std::string text);
 inline int ascii_to_number(char znak);
 
 //! STATES
-
 class parser {
 public:
   parser(std::string);
@@ -74,9 +74,6 @@ class header_comment : public header {
 public:
   header_comment() : header() {}
   void read(char, parser *);
-
-// protected:
-  // std::string buffer_;
 };
 
 class number : public state {
@@ -85,6 +82,7 @@ public:
   void read(char znak, parser *);
 
 private:
+//FIXME change this name na cos sensownego
   std::string buff_;
 };
 

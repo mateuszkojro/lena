@@ -17,17 +17,23 @@
 class obraz;
 int liczkolory(obraz);
 
+// nie ma potrzeby definiowania konstruktora kopiujacaego ani operatora ==
+// poniewaz nie mamy elementow ktore wymagaja specjalnego traktowania podczas
+// kopiowania
 class obraz {
 public:
   obraz() {}
 
   unsigned long count_colors();
   unsigned long count_pixels();
-  virtual ~obraz(){}
+  virtual ~obraz() {}
+
 protected:
   std::vector<pixelRGB> buffer_;
-  int size_x_;
+  // FIXME not using them
+  int size_x_; 
   int size_y_;
+  int max_color_;
 };
 
 #endif // OBRAZ_H

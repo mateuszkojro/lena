@@ -10,6 +10,7 @@ ppm::ppm(std::string path) : obraz() {
   file.open(path, std::ios::in);
 
   std::string input;
+  // TODO make it allocate less
   while (std::getline(file, input)) {
     input += "\n";
     all += input;
