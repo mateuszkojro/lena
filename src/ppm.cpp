@@ -17,4 +17,4 @@ ppm::ppm(std::string path) : obraz() {
   parser p(all);
   buffer_ = p.get();
   DEB(p.get().size());
-}
+};
