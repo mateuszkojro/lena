@@ -2,8 +2,38 @@
 #include "parser.h"
 #include "ppm.h"
 
+ bool is_digit(char znak);
+ bool is_comment(char znak);
+ bool is_whitespace(char znak);
+ int to_number(std::string text);
+ int ascii_to_number(char znak);
+ bool is_digit(char znak);
+ bool is_comment(char znak);
+ bool is_whitespace(char znak);
+ int to_number(std::string text);
+ int ascii_to_number(char znak);
+
+bool is_digit(char znak) { return (znak >= 48 && znak <= 57); }
+bool is_comment(char znak) { return (znak == '#'); }
+bool is_whitespace(char znak) {
+  return (znak == '\t' || znak == ' ' || znak == '\n');
+}
+
+// TODO add bounds checking
+int to_number(std::string text) {
+  // TODO check ujemne
+  int result = 0;
+  for (unsigned i = 0; i < text.size(); i++) {
+    result += (text[i] - 48) * pow(10, text.size() - i - 1);
+  }
+  return result;
+}
+
+// TODO add bounds checking
+int ascii_to_number(char znak) { return znak - 48; }
+
 //! header
-void header_ppm::read(char znak, parser_ppm *machine) {
+void header::read(char znak, parser_ppm *machine) {
   if (znak == '#') {
     machine->change_state(new header_comment());
     delete this;
@@ -19,7 +49,7 @@ void header_ppm::read(char znak, parser_ppm *machine) {
 //! header comment
 void header_comment::read(char znak, parser_ppm *machine) {
   if (znak == '\n') {
-    machine->change_state(new header_ppm());
+    machine->change_state(new header());
     delete this;
   }
 }
@@ -52,7 +82,7 @@ void header_dimentions::read(char znak, parser_ppm *machine) {
     machine->buffer_ = "";
   } else {
     //TODO nie podoba mi sie to dawanie znaku w tym mijescu
-    machine->change_state(new number<ppm>(znak));
+    machine->change_state(new number<ppm>());
     delete this;
   }
 }

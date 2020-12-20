@@ -31,7 +31,7 @@ public:
   void read(char, parser_ppm *);
 };
 
-template <> class parser<ppm> : parser_interface<ppm> {
+template <> class parser<ppm> : public parser_interface<ppm> {
 public:
   parser(std::string text) {
     current_state_ = new header();

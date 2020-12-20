@@ -24,7 +24,7 @@ inline int to_number(std::string text);
 inline int ascii_to_number(char znak);
 
 template <typename t> class parser_interface {
-protected:
+public:
   friend class state<t>;
   t parsing_target_;
   std::string buffer_;

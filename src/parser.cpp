@@ -1,5 +1,11 @@
 #include "parser.h"
 
+ bool is_digit(char znak);
+ bool is_comment(char znak);
+ bool is_whitespace(char znak);
+ int to_number(std::string text);
+ int ascii_to_number(char znak);
+
 bool is_digit(char znak) { return (znak >= 48 && znak <= 57); }
 bool is_comment(char znak) { return (znak == '#'); }
 bool is_whitespace(char znak) {
