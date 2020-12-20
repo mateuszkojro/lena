@@ -10,92 +10,115 @@
 #include "pixelRGB.h"
 #include "ppm.h"
 
-class state;
-class number;
-class comment;
-class whitespace;
-class parser;
+template <typename> class state;
+template <typename> class number;
+template <typename> class comment;
+template <typename> class whitespace;
+template <typename> class parser;
 
 //! HELPERS
-inline bool is_number(char znak);
+inline bool is_digit(char znak);
 inline bool is_comment(char znak);
 inline bool is_whitespace(char znak);
 inline int to_number(std::string text);
 inline int ascii_to_number(char znak);
 
-//! STATES
-class parser {
-public:
-  parser(std::string);
-  std::vector<pixelRGB> get();
-  inline void change_state(state *);
-  std::vector<char> buffer_;
-  ~parser();
-
+template <typename t> class parser_interface {
 protected:
-  state *current_state_;
+  friend class state<t>;
+  t parsing_target_;
+  std::string buffer_;
+  state<t> *current_state_;
+  std::vector<int> pixel_buffer_;
+  inline virtual void change_state(state<t> *new_state) = 0;
+  inline virtual t get() = 0;
+  virtual ~parser_interface<t>(){};
 };
 
-class state {
+//! STATES
+template <typename t> class parser {
 public:
-  state();
-  // state(char znak);
-  virtual void read(char, parser *);
+  friend class state<t>;
+  t parsing_target_;
+  // HAACK well thats a hack if i ever seen one
+  std::string buffer_;
+  std::vector<int> pixel_buffer_;
+  inline void change_state(state<t> *new_state) { current_state_ = new_state; }
+  t get() { return parsing_target_; }
+  ~parser() { delete current_state_; }
+  state<t> *current_state_;
+
+protected:
+  // parser(std::string);
+  parser();
+};
+
+template <typename t> class state {
+public:
+  void read(char, parser<t> *) {
+    // TODO remove me
+    ERR("WTF");
+    exit(123);
+  }
+
+protected:
+  state() {}
   virtual ~state() {}
 };
 
-class header : public state {
+template <typename t> class number : public state<t> {
 public:
-  header() {}
-  virtual void read(char, parser *);
+  number() : state<t>() {}
 
-protected:
-  std::string format_;
-  bool is_binary_;
-  std::vector<unsigned> dimentions_;
+  void read(char znak, parser<t> *machine) {
+    if (is_digit(znak)) {
+      machine->buff_ += znak;
+    } else {
+      machine->pixel_buffer_.push_back(to_number(machine->buff_));
+      if (machine->pixel_buffer_.size() == 3) {
+        // HAACK well kazde ddzialaenie ma swoje konsekwencje
+        // ale bez lepszych pomyslow poki co
+
+        int r = machine->pixel_buffer_[0];
+        int g = machine->pixel_buffer_[1];
+        int b = machine->pixel_buffer_[1];
+        machine->pixel_buffer_.clear();
+        machine->parsing_target_.buffer_.push_back(pixelRGB(r, g, b));
+      }
+      if (is_comment(znak)) {
+        machine->change_state(new comment<t>());
+        delete this;
+      } else if (is_whitespace(znak)) {
+        machine->change_state(new whitespace<t>());
+        delete this;
+      }
+    }
+  }
 };
 
-class header_format : public header {
+template <typename t> class comment : public state<t> {
 public:
-  header_format() : header() { format_ += "P"; }
-  void read(char, parser *);
+  comment() : state<t>() {}
+  void read(char znak, parser<t> *machine) {
+    if (znak == '\n' || znak == '\0') {
+      machine->change_state(new whitespace<t>());
+      delete this;
+    }
+  }
 };
 
-class header_dimentions : public header {
+template <typename t> class whitespace : public state<t> {
 public:
-  header_dimentions() : header() {}
-  void read(char, parser *);
-
-protected:
-  std::string buffer_;
-};
-
-class header_comment : public header {
-public:
-  header_comment() : header() {}
-  void read(char, parser *);
-};
-
-class number : public state {
-public:
-  number(char);
-  void read(char znak, parser *);
-
-private:
-//FIXME change this name na cos sensownego
-  std::string buff_;
-};
-
-class comment : public state {
-public:
-  comment() : state() {}
-  void read(char znak, parser *);
-};
-
-class whitespace : public state {
-public:
-  whitespace() : state() {}
-  void read(char znak, parser *);
+  whitespace() : state<t>() {}
+  void read(char znak, parser<t> *machine) {
+    if (is_digit(znak)) {
+      machine->change_state(new number<t>(znak));
+      delete this;
+    } else if (is_comment(znak)) {
+      machine->change_state(new comment<t>());
+      delete this;
+    }
+  }
 };
 
 #endif

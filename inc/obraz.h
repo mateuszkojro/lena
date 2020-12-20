@@ -28,7 +28,7 @@ public:
   unsigned long count_pixels();
   virtual ~obraz() {}
 
-protected:
+// protected:
   std::vector<pixelRGB> buffer_;
   // FIXME not using them
   int size_x_; 

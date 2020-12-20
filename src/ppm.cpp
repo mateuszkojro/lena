@@ -1,6 +1,7 @@
 #include "ppm.h"
 #include "debug.h"
 #include "parser.h"
+#include "parser_ppm.h"
 
 ppm::ppm(std::string path) : obraz() {
   std::fstream file;
@@ -15,7 +16,7 @@ ppm::ppm(std::string path) : obraz() {
     input += "\n";
     all += input;
   }
-  parser p(all);
-  buffer_ = p.get();
+  parser_ppm p(all);
+  std::cout << "liczba kolorow: " << p.get().count_colors() << std::endl;
   DEB(p.get().size());
 };

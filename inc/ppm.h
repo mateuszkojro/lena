@@ -5,10 +5,24 @@
 #include <iostream>
 #include <string>
 
+enum mode {
+  none,
+  ascii,
+  binary
+};
+
 class ppm : public obraz {
 public:
-  ppm() = delete;
+  ppm(){} 
+  // TODO initiaaalize vars
   ppm(std::string file);
+
+// private:
+  //TODO fix this name 
+  mode mode_;
+  unsigned size_x_, size_y_,
+      color_depth_;
+
 };
 
 #endif // PPM_H

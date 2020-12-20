@@ -22,6 +22,7 @@ add_executable( lena
                     src/parser.cpp 
                     src/ppm.cpp
                     src/obraz.cpp
+                    src/parser_ppm.cpp
 )
 
 add_executable( test_lena 
@@ -37,7 +38,8 @@ add_executable( zadanie
                     src/parser.cpp 
                     src/ppm.cpp
                     src/obraz.cpp
-)
+                    )
+
 add_test(NAME test_lena COMMAND test_lena)
 add_test(NAME zdanie COMMAND zadanie)
 add_test(NAME lena COMMAND lena)
