@@ -11,7 +11,7 @@ int helpers::to_number(std::string text) {
   // TODO check ujemne
   int result = 0;
   for (unsigned i = 0; i < text.size(); i++) {
-    result += (text[i] - 48) * pow(10, text.size() - i - 1);
+    result += (ascii_to_number(text[i])) * pow(10, text.size() - i - 1);
   }
   return result;
 }

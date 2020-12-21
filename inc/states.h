@@ -5,13 +5,15 @@
 #include "ppm_parser.h"
 #include "state_machine.h"
 #include "helpers.h"
+#include <cstdio>
 
 template <class> class comment;
 template <class> class whitespace;
 
 template <typename t> class number : public state_interface<t> {
 public:
-  void read(char znak, state_machine<ppm> *machine) override {
+  void read(char znak, state_machine<ppm> *machine)  {
+  //  printf("number: %c\n", znak); 
     if (helpers::is_digit(znak)) {
       machine->push_number_buffer(znak);
     } else {
@@ -33,7 +35,7 @@ public:
 template <typename t> class comment : public state_interface<t> {
 public:
   comment() : state_interface<t>() {}
-  void read(char znak, state_machine<t> *machine) override {
+  void read(char znak, state_machine<t> *machine)  {
     if (znak == '\n' || znak == '\0') {
       machine->change_state(new whitespace<t>());
       delete this;
@@ -44,7 +46,7 @@ public:
 template <typename t> class whitespace : public state_interface<t> {
 public:
   whitespace() : state_interface<t>() {}
-  void read(char znak, state_machine<t> *machine) override {
+  void read(char znak, state_machine<t> *machine)  {
     if (helpers::is_digit(znak)) {
       machine->push_number_buffer(znak);
       machine->change_state(new number<t>());

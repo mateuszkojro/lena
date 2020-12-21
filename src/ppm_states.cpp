@@ -1,6 +1,7 @@
 #include "ppm_states.h"
 
 void ppm_header::read(char znak, ppm_parser *machine) {
+  printf("header: %c\n",znak);
   if (znak == '#') {
     machine->change_state(new header_comment());
     delete this;
@@ -45,6 +46,7 @@ void header_dimentions::read(char znak, ppm_parser *machine) {
     machine->set_color_depth(machine->get_number_buffer());
   } else {
     //TODO nie podoba mi sie to dawanie znaku w tym mijescu
+    machine->push_number_buffer(znak);
     machine->change_state(new number<ppm>());
     delete this;
   }

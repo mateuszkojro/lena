@@ -4,6 +4,7 @@
 #include "ppm.h"
 #include "ppm_states.h"
 #include "state_machine.h"
+#include <cstdio>
 #include <string>
 
 
@@ -30,20 +31,21 @@ pixelRGB ppm_parser::get_pixel_buffer() {
 }
 
 void ppm_parser::push_pixel_buffer(int value) {
-  if (value < parsing_target_.color_depth_ && value > 0) {
+  // if (value < parsing_target_.color_depth_ && value > 0) {
     pixel_buffer_.push_back(value);
-  }
+  // }
 }
 
 int ppm_parser::get_number_buffer() {
   int temp = helpers::to_number(number_buffer_);
+  // printf("number(int): %d\n",temp);
   number_buffer_.clear();
   return temp;
 }
 
 void ppm_parser::push_number_buffer(char znak) {
   if (helpers::is_digit(znak))
-    number_buffer_.push_back(helpers::ascii_to_number(znak));
+    number_buffer_.push_back(znak);
 }
 
 bool ppm_parser::is_pixel_ready() {

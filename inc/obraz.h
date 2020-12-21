@@ -29,7 +29,7 @@ public:
   virtual ~obraz() {}
 
 // protected:
-  std::vector<pixel> pixels_;
+  std::vector<pixelRGB> pixels_;
 
   unsigned size_x_; 
   unsigned size_y_;

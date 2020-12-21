@@ -1,4 +1,3 @@
-#include "parser.h"
 #include "ppm.h"
 #include <catch2/catch.hpp>
 

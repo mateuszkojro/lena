@@ -1,5 +1,6 @@
 #ifndef PARSER_H
 #define PARSER_H
+#include <iostream>
 
 template <class> class state_interface;
 template <class t> class state_machine; 
@@ -16,7 +17,7 @@ protected:
 
 template <class t> class state_interface {
 public:
-  inline virtual void read(char, state_machine<t> *) {};
+  inline virtual void read(char, state_machine<t> *) {printf("kurwaaa");};
 protected:
   virtual ~state_interface(){} 
 };

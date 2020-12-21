@@ -1,11 +1,11 @@
 #include <fstream>
 #include <iostream>
 #include <math.h>
+#include <string>
 #include <unordered_map>
 
 #include "debug.h"
 #include "obraz.h"
-#include "parser.h"
 #include "ppm.h"
 
 /* *
@@ -24,6 +24,7 @@
 // because of the fact that if converts dopiero after
 int main(int argc, char *argv[]) {
   TIME_START(all);
+  try {
   obraz *o;
   if (argc < 2) {
     o = new ppm("../files/big_lena_full.ppm");
@@ -33,4 +34,8 @@ int main(int argc, char *argv[]) {
   TIME_STOP(all, "all");
   std::cout << "there is: " << o->count_colors() << " colors" << std::endl;
   delete o;
+  }
+  catch(std::string & e) {
+    std::cout << e;
+  }
 }

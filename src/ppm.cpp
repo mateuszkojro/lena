@@ -16,5 +16,10 @@ ppm::ppm(std::string path) : obraz() {
     all += input;
   }
   ppm_parser p(all);
+  std::cout << "depth: " << p.get().color_depth_
+            << "\nsize x: " << p.get().size_x_
+            << "\nsize y: " << p.get().size_y_
+            << "\nno colors: " << p.get().count_colors()
+            << "\ncount pixles: " << p.get().count_pixels() << "\n";
   *this = p.get();
 };
