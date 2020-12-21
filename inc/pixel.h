@@ -5,12 +5,18 @@
 #include "debug.h"
 typedef char color;
 
-class pixel
+class pixel_interface {
+  virtual unsigned hash() = 0;
+};
+
+class pixel : pixel_interface
 {
 public:
-    pixel(){};
-    inline virtual unsigned hash() { ERR("reading in virtual pixel"); return 1; };
+    inline virtual unsigned hash() { throw "thats bad" ;return -1; };
     virtual ~pixel(){};
+    pixel(){};
+
+protected:
 };
 
 #endif

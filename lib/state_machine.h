@@ -15,8 +15,9 @@ protected:
 };
 
 template <class t> class state_interface {
-protected:
+public:
   inline virtual void read(char, state_machine<t> *) {};
+protected:
   virtual ~state_interface(){} 
 };
 

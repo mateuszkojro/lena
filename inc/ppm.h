@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-enum mode {
+enum file_type {
   none,
   ascii,
   binary
@@ -17,12 +17,9 @@ public:
   // TODO initiaaalize vars
   ppm(std::string file);
 
-  unsigned long count_colors() { std::cout << "ppm count colors\n"; }
 // private:
   //TODO fix this name 
-  mode mode_;
-  unsigned size_x_, size_y_,
-      color_depth_;
+  file_type mode_;
 
 };
 
