@@ -20,3 +20,12 @@ TEST_CASE("count colors in full lena", "[obraz]") {
   ppm p("../test/test_files/lena_full.ppm");
   REQUIRE(p.count_colors() == 52669);
 }
+
+TEST_CASE("count colors in big lena", "[obraz]") {
+  ppm p("../test/test_files/lena_full.ppm");
+  REQUIRE(p.count_colors() == 124317);
+}
+TEST_CASE("count pixels in big lena", "[obraz]") {
+  ppm p("../test/test_files/lena_full.ppm");
+  REQUIRE(p.count_pixels() == 1578 * 2048);
+}

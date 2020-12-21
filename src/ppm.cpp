@@ -1,8 +1,10 @@
 #include "ppm.h"
-#include "debug.h"
 #include "ppm_parser.h"
 
 ppm::ppm(std::string path) : obraz() {
+  mode_ = file_type(none);
+
+
   std::fstream file;
   std::string all;
   all.reserve(512 * 512);
@@ -22,4 +24,4 @@ ppm::ppm(std::string path) : obraz() {
             << "\nno colors: " << p.get().count_colors()
             << "\ncount pixles: " << p.get().count_pixels() << "\n";
   *this = p.get();
-};
+}

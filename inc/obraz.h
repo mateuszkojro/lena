@@ -22,7 +22,7 @@ int liczkolory(obraz);
 // kopiowania
 class obraz {
 public:
-  obraz() {}
+  obraz();
 
   unsigned long count_colors();
   unsigned long count_pixels();

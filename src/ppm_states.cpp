@@ -36,7 +36,7 @@ void header_format::read(char znak, ppm_parser *machine) {
 // TODO conttoll state enumem
 void header_dimentions::read(char znak, ppm_parser *machine) {
   // TODO czy ja powinienem sprawdzac tutaaj czy jest liczba?
-  if (helpers::is_digit(znak)) {
+  if (helpers::is_digit(znak) && !machine->did_read_color_depth()) {
     machine->push_number_buffer(znak);
   } else if (!machine->did_read_size_x()) {
     machine->set_size_x(machine->get_number_buffer());
@@ -45,7 +45,6 @@ void header_dimentions::read(char znak, ppm_parser *machine) {
   } else if (!machine->did_read_color_depth()) {
     machine->set_color_depth(machine->get_number_buffer());
   } else {
-    //TODO nie podoba mi sie to dawanie znaku w tym mijescu
     machine->push_number_buffer(znak);
     machine->change_state(new number<ppm>());
     delete this;

@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "ppm_parser.h"
+#include "debug.h"
 
 enum file_type {
   none,

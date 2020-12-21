@@ -13,7 +13,6 @@ template <class> class whitespace;
 template <typename t> class number : public state_interface<t> {
 public:
   void read(char znak, state_machine<ppm> *machine)  {
-  //  printf("number: %c\n", znak); 
     if (helpers::is_digit(znak)) {
       machine->push_number_buffer(znak);
     } else {
