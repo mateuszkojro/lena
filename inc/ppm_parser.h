@@ -1,7 +1,10 @@
 #ifndef PARSER_PPM_H
 #define PARSER_PPM_H
 
+// Klasa ppm_parser implementuje metody specyficznie potzrbne maszynie stanow do paroswania plikow ppm 
+
 #include "helpers.h"
+#include "obraz.h"
 #include "pixelRGB.h"
 #include "ppm.h"
 #include "state_machine.h"

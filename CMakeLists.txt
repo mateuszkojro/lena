@@ -12,7 +12,7 @@ include_directories(   src/
 
 enable_testing()
 
-set(CMAKE_CXX_FLAGS "-Wpedantic -g -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "-Wpedantic  -g -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 arch=native")
 #add_compile_definitions(DEBUG)
 set(CMAKE_CXX_STANDARD 17)
@@ -22,9 +22,9 @@ add_executable( lena
                     src/main.cpp 
                     src/helpers.cpp
                     src/obraz.cpp
-                    src/states.cpp
+                    src/pgm_parser.cpp
                     src/ppm.cpp
-                    src/ppm_states.cpp
+                    src/pgm.cpp
                     src/ppm_parser.cpp
 )
 
@@ -34,19 +34,19 @@ add_executable( test_lena
                     test/test_pixel.cpp
                     src/helpers.cpp
                     src/obraz.cpp
-                    src/states.cpp
+                    src/pgm_parser.cpp
                     src/ppm.cpp
-                    src/ppm_states.cpp
+                    src/pgm.cpp
                     src/ppm_parser.cpp
 )
 add_executable( zadanie 
                     test/zadanie.cpp 
                     src/helpers.cpp
                     src/obraz.cpp
-                    src/states.cpp
+                    src/pgm_parser.cpp
                     src/ppm.cpp
-                    src/ppm_states.cpp
                     src/ppm_parser.cpp
+                    src/pgm.cpp
                     )
 
 add_test(NAME test_lena COMMAND test_lena)

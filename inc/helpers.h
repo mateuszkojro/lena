@@ -4,6 +4,8 @@
 #include <math.h>
 #include <string>
 
+// klasa zostala utworozna tylko i wylacznie dla porzadku przechowujemy w niej jedynie pure czesto uzywane funkcjie w calym projekcie
+
 //! HELPERS
 class helpers {
 public:

@@ -2,14 +2,14 @@
 #include "helpers.h"
 #include "pixelRGB.h"
 #include "ppm.h"
-#include "ppm_states.h"
+#include "states.h"
 #include "state_machine.h"
 #include <cstdio>
 #include <string>
 
 
 state_machine<ppm>::state_machine(std::string text) {
-  current_state_ = new ppm_header();
+  current_state_ = new header<ppm>();
   for (char znak : text) {
     current_state_->read(znak,this);
   }

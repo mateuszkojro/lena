@@ -7,7 +7,7 @@ template <class t> class state_machine;
 
 
 template <class t> class state_machine {
-protected:
+public:
   state_interface<t> current_state_;
   t target_obj_;
   inline void change_state(state_interface<t> *new_state) {current_state_ = new_state;};

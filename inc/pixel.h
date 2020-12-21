@@ -1,3 +1,4 @@
+
 #ifndef PIXEL_H
 #define PIXEL_H
 
@@ -6,14 +7,12 @@
 #include "debug.h"
 typedef char color;
 
-class pixel_interface {
-  virtual unsigned hash() = 0;
-};
+// klasa bazowa dla rewszty pixeli 
 
-class pixel : pixel_interface
+class pixel 
 {
 public:
-    inline virtual unsigned hash() {  printf("uzywam nie tego hasha"); /*throw "thats bad" */;return -1; };
+    inline virtual unsigned hash() {return -1;};
     virtual ~pixel(){};
     pixel(){};
 

@@ -8,12 +8,8 @@
 #include <unordered_map>
 #include <vector>
 
-// klasa obbraz
-// - Uber klasa dla mniejszych klas
-// - posiada buffor z obiektami @pixel
-// - liczy kolory @count_colors
-// -
-
+// przechowujemy jakiego rodzjau plik czytamy
+enum file_type { none, ascii, binary };
 class obraz;
 int liczkolory(obraz);
 
@@ -24,14 +20,14 @@ class obraz {
 public:
   obraz();
 
-  unsigned long count_colors();
-  unsigned long count_pixels();
+  virtual unsigned long count_colors(){return -1;}
+  virtual unsigned long count_pixels(){return -1;}
   virtual ~obraz() {}
 
-// protected:
-  std::vector<pixelRGB> pixels_;
+  // protected:
 
-  unsigned size_x_; 
+  file_type mode_;
+  unsigned size_x_;
   unsigned size_y_;
   unsigned color_depth_;
 };
