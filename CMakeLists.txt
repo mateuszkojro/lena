@@ -20,30 +20,33 @@ set(CMAKE_CXX_STANDARD 17)
 set(FILES "/src/*.cpp")
 add_executable( lena 
                     src/main.cpp 
-                    src/parser.cpp 
-                    src/ppm.cpp
+                    src/helpers.cpp
                     src/obraz.cpp
-                    src/parser_ppm.cpp
+                    src/states.cpp
+                    src/ppm.cpp
                     src/ppm_states.cpp
+                    src/ppm_parser.cpp
 )
 
 add_executable( test_lena 
-                    test/test_main.cpp 
-                    test/test_pixel.cpp 
+                    test/test_main.cpp
                     test/test_obraz.cpp
-                    src/parser.cpp 
-                    src/ppm.cpp
+                    test/test_pixel.cpp
+                    src/helpers.cpp
                     src/obraz.cpp
-                    src/parser_ppm.cpp
+                    src/states.cpp
+                    src/ppm.cpp
                     src/ppm_states.cpp
+                    src/ppm_parser.cpp
 )
 add_executable( zadanie 
-                    test/zadanie.cpp
-                    src/parser.cpp 
-                    src/ppm.cpp
+                    test/zadanie.cpp 
+                    src/helpers.cpp
                     src/obraz.cpp
-                    src/parser_ppm.cpp
+                    src/states.cpp
+                    src/ppm.cpp
                     src/ppm_states.cpp
+                    src/ppm_parser.cpp
                     )
 
 add_test(NAME test_lena COMMAND test_lena)
