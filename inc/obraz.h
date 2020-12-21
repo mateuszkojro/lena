@@ -24,12 +24,12 @@ class obraz {
 public:
   obraz() {}
 
-  unsigned long count_colors();
+  virtual unsigned long count_colors();
   unsigned long count_pixels();
   virtual ~obraz() {}
 
 // protected:
-  std::vector<pixelRGB> buffer_;
+  std::vector<pixelRGB> pixels_;
   // FIXME not using them
   int size_x_; 
   int size_y_;

@@ -5,6 +5,7 @@ message("________ SETUP MAKEFILE ________")
 project(lena VERSION 1.0.0)
 include_directories(   src/ 
                        inc/ 
+                       lib/
                        /usr/include
 )
 # source_group(src/)
@@ -23,6 +24,7 @@ add_executable( lena
                     src/ppm.cpp
                     src/obraz.cpp
                     src/parser_ppm.cpp
+                    src/ppm_states.cpp
 )
 
 add_executable( test_lena 
@@ -33,6 +35,7 @@ add_executable( test_lena
                     src/ppm.cpp
                     src/obraz.cpp
                     src/parser_ppm.cpp
+                    src/ppm_states.cpp
 )
 add_executable( zadanie 
                     test/zadanie.cpp
@@ -40,6 +43,7 @@ add_executable( zadanie
                     src/ppm.cpp
                     src/obraz.cpp
                     src/parser_ppm.cpp
+                    src/ppm_states.cpp
                     )
 
 add_test(NAME test_lena COMMAND test_lena)
